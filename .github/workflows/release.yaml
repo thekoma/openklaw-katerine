@@ -2,10 +2,12 @@ name: Build and Release
 
 on:
   push:
-    branches: [ "**" ] # Trigger on all branches (or restrict to master as needed)
+    branches: [ "**" ]
+    tags: [ "**" ] # Trigger on all branches (or restrict to master as needed)
   schedule:
     - cron: '0 3 * * *' # 3 AM nightly
   workflow_dispatch:
+  
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -19,8 +21,10 @@ jobs:
       packages: write # Required to push to GHCR
 
     steps:
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0 # Fetch all history for tags
 
@@ -28,6 +32,13 @@ jobs:
         id: calculate_tag
         run: |
           set -e
+          
+          if [[ "${{ github.ref_type }}" == "tag" ]]; then
+            echo "Triggered by tag: ${{ github.ref_name }}"
+            echo "tag=${{ github.ref_name }}" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
           # Get current YYYY.MM
           PREFIX=$(date +'%Y.%m')
           echo "Prefix: $PREFIX"
@@ -80,7 +91,7 @@ jobs:
             type=schedule,pattern=latest-nightly
 
       - name: Build and push Docker image
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v5
         with:
           context: .
           push: true
@@ -93,11 +104,19 @@ jobs:
           cache-to: type=gha,mode=max
 
       # Push the git tag strictly AFTER a successful build
+      # Only process if we calculated a new tag (not triggered by tag)
       - name: Push Git Tag
-        if: success()
+        if: success() && github.ref_type != 'tag'
         run: |
           NEW_TAG=${{ steps.calculate_tag.outputs.tag }}
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git tag $NEW_TAG
           git push origin $NEW_TAG
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        if: success()
+        with:
+          tag_name: ${{ steps.calculate_tag.outputs.tag }}
+          generate_release_notes: true
