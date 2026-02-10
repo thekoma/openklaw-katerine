@@ -10,7 +10,7 @@ on:
   
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: ${{ github.workflow }}
   cancel-in-progress: true
 
 jobs:
@@ -21,8 +21,6 @@ jobs:
       packages: write # Required to push to GHCR
 
     steps:
-      - name: Cancel Previous Runs
-        uses: styfle/cancel-workflow-action@0.13.0
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
