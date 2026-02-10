@@ -28,34 +28,29 @@ jobs:
         id: calculate_tag
         run: |
           set -e
-          # Get current YYYYMM
-          PREFIX=$(date +'%Y%m')
+          # Get current YYYY.MM
+          PREFIX=$(date +'%Y.%m')
           echo "Prefix: $PREFIX"
           
           # Fetch all tags to ensure we have the complete list
           git fetch --tags
           
-          # Find highest existing tag matching the prefix
+          # Find highest existing tag matching the prefix YYYY.MM.
           # We filter tags starting with the prefix, sort 'Version' aware, and take the last one.
-          LAST_TAG=$(git tag --list "${PREFIX}*" | sort -V | tail -n 1)
+          LAST_TAG=$(git tag --list "${PREFIX}.*" | sort -V | tail -n 1)
           echo "Last tag found: $LAST_TAG"
           
           if [ -z "$LAST_TAG" ]; then
-            NEW_TAG="${PREFIX}00"
+            NEW_TAG="${PREFIX}.0"
           else
-            # Extract the suffix (remove the prefix)
-            SUFFIX=${LAST_TAG#$PREFIX}
+            # Extract the suffix (remove the prefix and the dot)
+            # Tag is YYYY.MM.INC, Prefix is YYYY.MM
+            SUFFIX=${LAST_TAG#$PREFIX.}
             
-            # Increment the suffix. 
-            # Using 10# to force base-10 interpretation to avoid octal confusion with leading zeros (e.g. 08)
+            # Increment the suffix.
             NEW_SUFFIX=$(echo "$SUFFIX" | awk '{print $1 + 1}')
             
-            # Pack it back with leading zero if needed (maintain 2 digits minimum, or just append)
-            # The requirement was YYYYMMINCREMENTAL. Typically 00, 01... 
-            # We will use printf %02d for 0-99.
-            NEW_SUFFIX_PADDED=$(printf "%02d" $NEW_SUFFIX)
-            
-            NEW_TAG="${PREFIX}${NEW_SUFFIX_PADDED}"
+            NEW_TAG="${PREFIX}.${NEW_SUFFIX}"
           fi
           
           echo "Calculated new tag: $NEW_TAG"

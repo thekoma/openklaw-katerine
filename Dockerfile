@@ -6,7 +6,7 @@ RUN go install github.com/steipete/gifgrep/cmd/gifgrep@latest && \
     go install github.com/steipete/camsnap/cmd/camsnap@latest
 
 
-FROM ghcr.io/openclaw/openclaw:latest AS openclaw
+FROM ghcr.io/openclaw/openclaw:2026.2.9 AS openclaw
 
 USER root
 ENV PNPM_HOME="/usr/local/bin"

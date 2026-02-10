@@ -1,0 +1,35 @@
+{
+    "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+    "extends": [
+        "config:base"
+    ],
+    "labels": [
+        "dependencies"
+    ],
+    "schedule": [
+        "before 3am"
+    ],
+    "automerge": true,
+    "packageRules": [
+        {
+            "description": "Automerge dependencies",
+            "matchUpdateTypes": [
+                "minor",
+                "patch",
+                "pin",
+                "digest"
+            ],
+            "automerge": true
+        },
+        {
+            "description": "Ensure ghcr.io/openclaw/openclaw is updated and automerged",
+            "matchPackageNames": [
+                "ghcr.io/openclaw/openclaw"
+            ],
+            "matchDatasources": [
+                "docker"
+            ],
+            "automerge": true
+        }
+    ]
+}
