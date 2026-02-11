@@ -4,11 +4,13 @@ WORKDIR /go
 ENV CGO_ENABLED=0
 RUN go install github.com/steipete/gifgrep/cmd/gifgrep@latest
 RUN go install github.com/steipete/camsnap/cmd/camsnap@latest
+RUN go install github.com/grafana/mcp-grafana/cmd/mcp-grafana@latest
 RUN apk add --no-cache git make bash && \
     git clone https://github.com/steipete/gogcli.git && \
     cd gogcli && \
     make && \
     cp bin/gog /go/bin/gogcli
+RUN echo -e "##################\nBuilded go executables\n##################\n"; ls -altr /go/bin; echo -e "##################\n"
 
 FROM ghcr.io/openclaw/openclaw:2026.2.9 AS openclaw
 
@@ -27,5 +29,5 @@ RUN apt update && \
     echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | tee /etc/apt/sources.list.d/github-cli.list > /dev/null && \
     apt update && apt install -yq --no-install-recommends gh && \
     rm -rf /var/cache/apt/archives /var/lib/apt/lists/*
-COPY --from=gobuilder /go/bin/gifgrep /go/bin/camsnap /go/bin/gogcli /usr/local/bin/
+COPY --from=gobuilder /go/bin/ /usr/local/bin/
 USER node
