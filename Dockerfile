@@ -18,16 +18,35 @@ USER root
 ENV PNPM_HOME="/usr/local/bin"
 ENV PATH="$PNPM_HOME:$PATH"
 RUN pnpm add -g clawhub mcporter @google/gemini-cli
-ENV SYSTEM_PACKAGES="ffmpeg mosh jq wget vim ncdu ripgrep tmux iproute2 lsof procps gh"
-RUN apt update && \
-    apt install -yq --no-install-recommends $SYSTEM_PACKAGES && \
+ENV SYSTEM_PACKAGES="ffmpeg mosh jq wget git vim ncdu ripgrep tmux iproute2 lsof procps gh vault kubectl"
+RUN apt-get update && \
+    apt-get install -yq --no-install-recommends wget gnupg lsb-release curl ca-certificates && \
+    ARCH=$(dpkg --print-architecture) && \
+    CODENAME=$(grep -oP '(?<=UBUNTU_CODENAME=).*' /etc/os-release || lsb_release -cs) && \
     mkdir -p -m 755 /etc/apt/keyrings && \
-    out=$(mktemp) && wget -nv -O$out https://cli.github.com/packages/githubcli-archive-keyring.gpg && \
-    cat $out | tee /etc/apt/keyrings/githubcli-archive-keyring.gpg > /dev/null && \
-    chmod go+r /etc/apt/keyrings/githubcli-archive-keyring.gpg && \
-    mkdir -p -m 755 /etc/apt/sources.list.d && \
-    echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | tee /etc/apt/sources.list.d/github-cli.list > /dev/null && \
-    apt update && apt install -yq --no-install-recommends gh && \
+    add_repo() { \
+    local url="$1" \
+    keyring="$2" \
+    list="$3" \
+    entry="$4"; \
+    wget -nv -O- "$url" | gpg --dearmor -o "$keyring"; \
+    chmod go+r "$keyring"; \
+    echo "$entry" | tee "$list" > /dev/null; \
+    } && \
+    add_repo "https://apt.releases.hashicorp.com/gpg" \
+    "/usr/share/keyrings/hashicorp-archive-keyring.gpg" \
+    "/etc/apt/sources.list.d/hashicorp.list" \
+    "deb [arch=$ARCH signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $CODENAME main" && \
+    add_repo "https://cli.github.com/packages/githubcli-archive-keyring.gpg" \
+    "/etc/apt/keyrings/githubcli-archive-keyring.gpg" \
+    "/etc/apt/sources.list.d/github-cli.list" \
+    "deb [arch=$ARCH signed-by=/etc/apt/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" && \
+    add_repo "https://pkgs.k8s.io/core:/stable:/v1.35/deb/Release.key" \
+    "/usr/share/keyrings/kubernetes-archive-keyring.gpg" \
+    "/etc/apt/sources.list.d/kubernetes.list" \
+    "deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.35/deb/ /" && \
+    apt-get update && \
+    apt-get install -yq --no-install-recommends $SYSTEM_PACKAGES && \
     rm -rf /var/cache/apt/archives /var/lib/apt/lists/*
 COPY --from=gobuilder /go/bin/ /usr/local/bin/
 USER node
