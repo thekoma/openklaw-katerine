@@ -1,0 +1,60 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: clawrag-backend
+  namespace: clawrag
+  labels:
+    app: clawrag-backend
+spec:
+  ports:
+    - port: 8000
+      targetPort: 8000
+      name: http
+  selector:
+    app: clawrag-backend
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: clawrag-backend
+  namespace: clawrag
+  labels:
+    app: clawrag-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: clawrag-backend
+  template:
+    metadata:
+      labels:
+        app: clawrag-backend
+    spec:
+      containers:
+        - name: backend
+          image: PLACEHOLDER_BACKEND_IMAGE
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8000
+          envFrom:
+            - configMapRef:
+                name: clawrag-config
+          resources:
+            requests:
+              cpu: "200m"
+              memory: "256Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 5
+            periodSeconds: 5
