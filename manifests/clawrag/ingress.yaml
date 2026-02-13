@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: chroma-ingress
+  namespace: clawrag
+  annotations:
+    # cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    # nginx.ingress.kubernetes.io/ssl-redirect: "true"
+spec:
+  ingressClassName: nginx # Change if using a different ingress controller (e.g., traefik)
+  tls:
+    - hosts:
+        - chroma.example.com # Replace with your domain
+      secretName: chroma-tls
+  rules:
+    - host: chroma.example.com # Replace with your domain
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: chroma
+                port:
+                  number: 8000
