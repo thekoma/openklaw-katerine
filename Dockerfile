@@ -4,12 +4,13 @@ WORKDIR /go
 ENV CGO_ENABLED=0
 RUN go install github.com/steipete/gifgrep/cmd/gifgrep@latest
 RUN go install github.com/steipete/camsnap/cmd/camsnap@latest
+RUN go install github.com/steipete/goplaces/cmd/goplaces@latest
 RUN go install github.com/grafana/mcp-grafana/cmd/mcp-grafana@latest
 RUN apk add --no-cache git make bash && \
     git clone https://github.com/steipete/gogcli.git && \
     cd gogcli && \
     make && \
-    cp bin/gog /go/bin/gogcli
+    cp bin/gog /go/bin/gog
 RUN echo -e "##################\nBuilded go executables\n##################\n"; ls -altr /go/bin; echo -e "##################\n"
 
 FROM ghcr.io/openclaw/openclaw:2026.2.9 AS openclaw
@@ -18,7 +19,7 @@ USER root
 ENV PNPM_HOME="/usr/local/bin"
 ENV PATH="$PNPM_HOME:$PATH"
 RUN pnpm add -g clawhub mcporter @google/gemini-cli
-ENV SYSTEM_PACKAGES="ffmpeg mosh jq wget git vim ncdu ripgrep tmux iproute2 lsof procps gh vault kubectl"
+ENV SYSTEM_PACKAGES="ffmpeg pipx mosh jq wget git vim ncdu ripgrep tmux iproute2 lsof procps gh vault kubectl"
 RUN apt-get update && \
     apt-get install -yq --no-install-recommends wget gnupg lsb-release curl ca-certificates && \
     ARCH=$(dpkg --print-architecture) && \
@@ -48,5 +49,11 @@ RUN apt-get update && \
     apt-get update && \
     apt-get install -yq --no-install-recommends $SYSTEM_PACKAGES && \
     rm -rf /var/cache/apt/archives /var/lib/apt/lists/*
+
+ENV PIPX_HOME=/opt/pipx
+ENV PIPX_BIN_DIR=/usr/local/bin
+ENV PIP_NO_CACHE_DIR=1
+RUN pipx install uv && \
+    rm -rf /root/.cache
 COPY --from=gobuilder /go/bin/ /usr/local/bin/
 USER node
