@@ -1,0 +1,22 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: openclaw
+
+resources:
+  - chromadb.yaml
+  - ollama.yaml
+  - backend.yaml
+  - gateway.yaml
+
+commonLabels:
+  app.kubernetes.io/name: clawrag
+  app.kubernetes.io/instance: clawrag-v1
+
+images:
+  - name: clawrag-backend
+    newName: ghcr.io/2dogsandanerd/clawrag-backend # Placeholder
+    newTag: latest
+  - name: clawrag-gateway
+    newName: ghcr.io/2dogsandanerd/clawrag-gateway # Placeholder
+    newTag: latest

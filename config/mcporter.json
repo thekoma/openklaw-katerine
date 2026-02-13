@@ -1,0 +1,50 @@
+{
+  "mcpServers": {
+    "hass": {
+      "baseUrl": "http://192.168.85.8:8123/api/mcp",
+      "description": "Home Assistant Native MCP",
+      "headers": {
+        "Authorization": "Bearer YOUR_HASS_TOKEN"
+      }
+    },
+    "kubernetes": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "mcp-server-kubernetes"
+      ]
+    },
+    "github": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-github"
+      ],
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "YOUR_GITHUB_TOKEN"
+      }
+    },
+    "context7": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@upstash/context7-mcp"
+      ],
+      "env": {
+        "CONTEXT7_API_KEY": "YOUR_CONTEXT7_API_KEY"
+      }
+    },
+    "grafana": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@leval/mcp-grafana"
+      ],
+      "env": {
+        "GRAFANA_URL": "http://kube-prometheus-stack-grafana.prometheus.svc.cluster.local",
+        "GRAFANA_SERVICE_ACCOUNT_TOKEN": "YOUR_GRAFANA_TOKEN"
+      }
+    }
+  },
+  "imports": []
+}
