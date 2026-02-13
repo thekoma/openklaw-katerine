@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "skills": {
+    "clawsec-suite": {
+      "version": "0.0.10",
+      "installedAt": 1770980816280
+    },
+    "intelligence-suite": {
+      "version": "1.0.2",
+      "installedAt": 1770981040980
+    },
+    "pulse-magazine": {
+      "version": "1.0.1",
+      "installedAt": 1770981052273
+    },
+    "clawrag": {
+      "version": "1.2.0",
+      "installedAt": 1770981662575
+    },
+    "engram-memory": {
+      "version": "0.2.0",
+      "installedAt": 1770981669308
+    }
+  }
+}

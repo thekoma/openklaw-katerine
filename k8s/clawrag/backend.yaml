@@ -1,0 +1,72 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: clawrag-backend
+  namespace: openclaw
+  labels:
+    app: clawrag-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: clawrag-backend
+  template:
+    metadata:
+      labels:
+        app: clawrag-backend
+    spec:
+      containers:
+      - name: backend
+        image: clawrag-backend:latest # REPLACE WITH YOUR IMAGE
+        ports:
+        - containerPort: 8080
+        env:
+        - name: CHROMA_HOST
+          value: "chromadb"
+        - name: CHROMA_PORT
+          value: "8000"
+        - name: LLM_PROVIDER
+          value: "ollama"
+        - name: LLM_MODEL
+          value: "llama3.1:8b-instruct-q4_k_m"
+        - name: EMBEDDING_PROVIDER
+          value: "ollama"
+        - name: EMBEDDING_MODEL
+          value: "nomic-embed-text"
+        - name: OLLAMA_HOST
+          value: "http://ollama:11434"
+        - name: DEBUG
+          value: "true"
+        - name: LOG_LEVEL
+          value: "INFO"
+        volumeMounts:
+        - name: docling-cache
+          mountPath: /app/cache
+      volumes:
+      - name: docling-cache
+        persistentVolumeClaim:
+          claimName: docling-cache-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: clawrag-backend
+  namespace: openclaw
+spec:
+  ports:
+  - port: 8080
+    targetPort: 8080
+  selector:
+    app: clawrag-backend
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: docling-cache-pvc
+  namespace: openclaw
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
