@@ -2,7 +2,7 @@ name: Build and Release
 
 on:
   push:
-    branches: [ "**" ]
+    branches: [ "main" ]
     tags: [ "**" ] # Trigger on all branches (or restrict to master as needed)
   schedule:
     - cron: '0 3 * * *' # 3 AM nightly
