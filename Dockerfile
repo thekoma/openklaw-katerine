@@ -2,13 +2,12 @@ FROM golang:1.26-alpine AS gobuilder
 
 WORKDIR /go
 ENV CGO_ENABLED=0
+RUN apk add --no-cache git make bash
 RUN go install github.com/steipete/gifgrep/cmd/gifgrep@latest
 RUN go install github.com/steipete/camsnap/cmd/camsnap@latest
 RUN go install github.com/steipete/goplaces/cmd/goplaces@latest
 RUN go install github.com/grafana/mcp-grafana/cmd/mcp-grafana@latest
-RUN apk add --no-cache git make bash
 RUN git clone https://github.com/steipete/gogcli.git
-RUN cd gogcli
 RUN sed -i 's/givenSet bool, given, familySet bool/givenSet bool, given string, familySet bool/' gogcli/internal/cmd/contacts_crud.go
 RUN sed -i 's/orgSet bool, org, titleSet bool/orgSet bool, org string, titleSet bool/' gogcli/internal/cmd/contacts_crud.go
 RUN cd gogcli && make
