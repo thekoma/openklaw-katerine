@@ -6,17 +6,17 @@ RUN go install github.com/steipete/gifgrep/cmd/gifgrep@latest
 RUN go install github.com/steipete/camsnap/cmd/camsnap@latest
 RUN go install github.com/steipete/goplaces/cmd/goplaces@latest
 RUN go install github.com/grafana/mcp-grafana/cmd/mcp-grafana@latest
-RUN apk add --no-cache git make bash && \
-    git clone https://github.com/steipete/gogcli.git && \
-    cd gogcli && \
-    sed -i 's/givenSet bool, given, familySet bool/givenSet bool, given string, familySet bool/' internal/cmd/contacts_crud.go && \
-    sed -i 's/orgSet bool, org, titleSet bool/orgSet bool, org string, titleSet bool/' internal/cmd/contacts_crud.go && \
-    make && \
-    cp bin/gog /go/bin/gog && \
-    git clone https://github.com/hashicorp/vault-mcp-server.git && \
-    cd vault-mcp-server && \
-    make build && \
-    cp bin/vault-mcp-server /go/bin/vault-mcp-server
+RUN apk add --no-cache git make bash
+RUN git clone https://github.com/steipete/gogcli.git
+RUN cd gogcli
+RUN sed -i 's/givenSet bool, given, familySet bool/givenSet bool, given string, familySet bool/' internal/cmd/contacts_crud.go
+RUN sed -i 's/orgSet bool, org, titleSet bool/orgSet bool, org string, titleSet bool/' internal/cmd/contacts_crud.go
+RUN make
+RUN cp bin/gog /go/bin/gog
+RUN git clone https://github.com/hashicorp/vault-mcp-server.git
+RUN cd vault-mcp-server
+RUN make build
+RUN cp bin/vault-mcp-server /go/bin/vault-mcp-server
 RUN echo -e "##################\nBuilded go executables\n##################\n"; ls -altr /go/bin; echo -e "##################\n"
 
 FROM ghcr.io/openclaw/openclaw:2026.2.23 AS openclaw
