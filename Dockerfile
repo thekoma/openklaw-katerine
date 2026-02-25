@@ -10,7 +10,11 @@ RUN apk add --no-cache git make bash && \
     git clone https://github.com/steipete/gogcli.git && \
     cd gogcli && \
     make && \
-    cp bin/gog /go/bin/gog
+    cp bin/gog /go/bin/gog && \
+    git clone https://github.com/hashicorp/vault-mcp-server.git && \
+    cd vault-mcp-server && \
+    make build && \
+    cp bin/vault-mcp-server /go/bin/vault-mcp-server
 RUN echo -e "##################\nBuilded go executables\n##################\n"; ls -altr /go/bin; echo -e "##################\n"
 
 FROM ghcr.io/openclaw/openclaw:2026.2.23 AS openclaw
