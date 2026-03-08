@@ -17,7 +17,7 @@ RUN cd vault-mcp-server && make build
 RUN cp vault-mcp-server/bin/vault-mcp-server /go/bin/vault-mcp-server
 RUN echo -e "##################\nBuilded go executables\n##################\n"; ls -altr /go/bin; echo -e "##################\n"
 
-FROM ghcr.io/openclaw/openclaw:2026.3.2 AS openclaw
+FROM ghcr.io/openclaw/openclaw:2026.3.7 AS openclaw
 
 USER root
 ENV PNPM_HOME="/usr/local/bin"
