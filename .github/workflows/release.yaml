@@ -2,12 +2,11 @@ name: Build and Release
 
 on:
   push:
-    branches: [ "main" ]
-    tags: [ "**" ] # Trigger on all branches (or restrict to master as needed)
+    branches: ["main"]
+    tags: ["**"] # Trigger on all branches (or restrict to master as needed)
   schedule:
-    - cron: '0 3 * * *' # 3 AM nightly
+    - cron: "0 3 * * *" # 3 AM nightly
   workflow_dispatch:
-  
 
 concurrency:
   group: ${{ github.workflow }}
@@ -30,7 +29,7 @@ jobs:
         id: calculate_tag
         run: |
           set -e
-          
+
           if [[ "${{ github.ref_type }}" == "tag" ]]; then
             echo "Triggered by tag: ${{ github.ref_name }}"
             echo "tag=${{ github.ref_name }}" >> $GITHUB_OUTPUT
@@ -40,15 +39,15 @@ jobs:
           # Get current YYYY.MM
           PREFIX=$(date +'%Y.%m')
           echo "Prefix: $PREFIX"
-          
+
           # Fetch all tags to ensure we have the complete list
           git fetch --tags
-          
+
           # Find highest existing tag matching the prefix YYYY.MM.
           # We filter tags starting with the prefix, sort 'Version' aware, and take the last one.
           LAST_TAG=$(git tag --list "${PREFIX}.*" | sort -V | tail -n 1)
           echo "Last tag found: $LAST_TAG"
-          
+
           if [ -z "$LAST_TAG" ]; then
             NEW_TAG="${PREFIX}.0"
           else
@@ -61,7 +60,7 @@ jobs:
             
             NEW_TAG="${PREFIX}.${NEW_SUFFIX}"
           fi
-          
+
           echo "Calculated new tag: $NEW_TAG"
           echo "tag=$NEW_TAG" >> $GITHUB_OUTPUT
 
@@ -101,7 +100,7 @@ jobs:
           # Enable caching
           cache-from: type=gha
           cache-to: type=gha,mode=max
-
+          output: type=registry,compression=estargz,force-compression=true
       # Push the git tag strictly AFTER a successful build
       # Only process if we calculated a new tag (not triggered by tag)
       - name: Push Git Tag
