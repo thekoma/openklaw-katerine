@@ -100,7 +100,9 @@ jobs:
           # Enable caching
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          output: type=registry,compression=estargz,force-compression=true
+          output: type=registry,oci-mediatypes=true,compression=estargz,compression-level=9,force-compression=true
+          sbom: true
+          provenance: true
       # Push the git tag strictly AFTER a successful build
       # Only process if we calculated a new tag (not triggered by tag)
       - name: Push Git Tag
