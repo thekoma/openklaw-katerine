@@ -2,10 +2,10 @@ name: Build and Release
 
 on:
   push:
-    branches: [ "**" ]
-    tags: [ "**" ] # Trigger on all branches (or restrict to master as needed)
+    branches: [ "main" ]
+    tags: [ "**" ]
   schedule:
-    - cron: '0 3 * * *' # 3 AM nightly
+    - cron: '0 3 * * *'
   workflow_dispatch:
   
 
