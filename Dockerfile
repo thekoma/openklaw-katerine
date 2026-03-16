@@ -22,7 +22,7 @@ FROM ghcr.io/openclaw/openclaw:2026.3.13-1 AS openclaw
 USER root
 ENV PNPM_HOME="/usr/local/bin"
 ENV PATH="$PNPM_HOME:$PATH"
-RUN pnpm add -g clawhub mcporter @google/gemini-cli better-sqlite3 lancedb @mem0/openclaw-mem0 @googleworkspace/cli && gws --version
+RUN pnpm add -g clawhub mcporter @google/gemini-cli better-sqlite3 lancedb @mem0/openclaw-mem0 @googleworkspace/cli acpx && gws --version
 ENV SYSTEM_PACKAGES="ffmpeg pipx mosh jq yq wget git vim ncdu ripgrep sqlite3 tmux iproute2 lsof procps gh vault kubectl"
 RUN apt-get update && \
     apt-get install -yq --no-install-recommends wget gnupg lsb-release curl ca-certificates && \
