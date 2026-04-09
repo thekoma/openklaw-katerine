@@ -58,7 +58,9 @@ ENV PIPX_HOME=/opt/pipx
 ENV PIPX_BIN_DIR=/usr/local/bin
 ENV PIP_NO_CACHE_DIR=1
 RUN pipx install uv && \
-    pipx install mempalace && \
+    uv venv /opt/mempalace && \
+    uv pip install --python /opt/mempalace/bin/python mempalace && \
+    ln -s /opt/mempalace/bin/mempalace /usr/local/bin/mempalace && \
     rm -rf /root/.cache
 
 # CLI tools: argocd, helm, egctl
