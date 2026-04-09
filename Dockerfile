@@ -68,7 +68,7 @@ RUN ARCH=$(dpkg --print-architecture) && \
     chmod +x /usr/local/bin/argocd && \
     curl -sL https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash && \
     EGCTL_VERSION=$(curl -sL https://api.github.com/repos/envoyproxy/gateway/releases/latest | grep '"tag_name"' | cut -d'"' -f4) && \
-    curl -sL "https://github.com/envoyproxy/gateway/releases/download/${EGCTL_VERSION}/egctl_${EGCTL_VERSION}_linux_${ARCH}.tar.gz" | tar xz -C /usr/local/bin egctl && \
+    curl -sL "https://github.com/envoyproxy/gateway/releases/download/${EGCTL_VERSION}/egctl_${EGCTL_VERSION}_linux_${ARCH}.tar.gz" | tar xz --strip-components=3 -C /usr/local/bin bin/linux/${ARCH}/egctl && \
     chmod +x /usr/local/bin/egctl
 
 COPY --from=gobuilder /go/bin/ /usr/local/bin/
