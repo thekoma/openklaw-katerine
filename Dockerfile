@@ -59,5 +59,16 @@ ENV PIPX_BIN_DIR=/usr/local/bin
 ENV PIP_NO_CACHE_DIR=1
 RUN pipx install uv && \
     rm -rf /root/.cache
+
+# CLI tools: argocd, helm, egctl
+RUN ARCH=$(dpkg --print-architecture) && \
+    ARGOCD_VERSION=$(curl -sL https://api.github.com/repos/argoproj/argo-cd/releases/latest | grep '"tag_name"' | cut -d'"' -f4) && \
+    curl -sL "https://github.com/argoproj/argo-cd/releases/download/${ARGOCD_VERSION}/argocd-linux-${ARCH}" -o /usr/local/bin/argocd && \
+    chmod +x /usr/local/bin/argocd && \
+    curl -sL https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash && \
+    EGCTL_VERSION=$(curl -sL https://api.github.com/repos/envoyproxy/gateway/releases/latest | grep '"tag_name"' | cut -d'"' -f4) && \
+    curl -sL "https://github.com/envoyproxy/gateway/releases/download/${EGCTL_VERSION}/egctl_${EGCTL_VERSION}_linux_${ARCH}.tar.gz" | tar xz -C /usr/local/bin egctl && \
+    chmod +x /usr/local/bin/egctl
+
 COPY --from=gobuilder /go/bin/ /usr/local/bin/
 USER node
