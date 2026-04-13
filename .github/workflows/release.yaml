@@ -115,7 +115,7 @@ jobs:
           git push origin $NEW_TAG
 
       - name: Create Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         if: success()
         with:
           tag_name: ${{ steps.calculate_tag.outputs.tag }}
