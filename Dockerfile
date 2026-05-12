@@ -23,7 +23,7 @@ USER root
 ENV PNPM_HOME="/usr/local/bin"
 ENV PATH="$PNPM_HOME:$PATH"
 RUN pnpm add -g clawhub mcporter @google/gemini-cli better-sqlite3 lancedb acpx
-ENV SYSTEM_PACKAGES="ffmpeg pipx mosh jq yq wget git vim ncdu ripgrep sqlite3 tmux iproute2 lsof procps gh vault kubectl"
+ENV SYSTEM_PACKAGES="ffmpeg pipx mosh jq yq wget git vim ncdu ripgrep sqlite3 tmux iproute2 lsof procps gh vault kubectl wkhtmltopdf"
 RUN apt-get update && \
     apt-get install -yq --no-install-recommends wget gnupg lsb-release curl ca-certificates && \
     ARCH=$(dpkg --print-architecture) && \
