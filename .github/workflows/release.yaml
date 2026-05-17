@@ -3,7 +3,14 @@ name: Build and Release
 on:
   push:
     branches: ["main"]
-    tags: ["**"] # Trigger on all branches (or restrict to master as needed)
+    tags: ["**"]
+    # Skip docs-only / Renovate-config-only / gitignore-only pushes.
+    # Anything not listed here (Dockerfile, scripts/**, .github/workflows/**, …)
+    # still triggers a build.
+    paths-ignore:
+      - "**.md"
+      - ".gitignore"
+      - "renovate.json"
   schedule:
     - cron: "0 3 * * *" # 3 AM nightly
   workflow_dispatch:
