@@ -2,6 +2,8 @@
 # Register third-party APT keyrings + sources used by install-system-pkgs.sh.
 set -euo pipefail
 
+: "${K8S_APT_MINOR:?K8S_APT_MINOR is required (e.g. 1.35)}"
+
 apt-get update
 apt-get install -yq --no-install-recommends \
     wget gnupg lsb-release curl ca-certificates
@@ -31,9 +33,9 @@ add_repo \
     "deb [arch=${ARCH} signed-by=/etc/apt/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main"
 
 add_repo \
-    "https://pkgs.k8s.io/core:/stable:/v1.35/deb/Release.key" \
+    "https://pkgs.k8s.io/core:/stable:/v${K8S_APT_MINOR}/deb/Release.key" \
     "/usr/share/keyrings/kubernetes-archive-keyring.gpg" \
     "/etc/apt/sources.list.d/kubernetes.list" \
-    "deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.35/deb/ /"
+    "deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v${K8S_APT_MINOR}/deb/ /"
 
 apt-get update

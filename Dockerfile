@@ -33,11 +33,13 @@ FROM ghcr.io/openclaw/openclaw:2026.5.12 AS openclaw
 USER root
 ENV PNPM_HOME="/usr/local/share/pnpm"
 ENV PATH="$PNPM_HOME/bin:$PATH"
-RUN mkdir -p "$PNPM_HOME/bin" && \
-    pnpm add -g clawhub mcporter @google/gemini-cli better-sqlite3 acpx @anthropic-ai/claude-code
+COPY scripts/install-global-pnpm.sh /tmp/scripts/
+RUN /tmp/scripts/install-global-pnpm.sh
 
+# renovate: datasource=endoflife-date depName=kubernetes
+ARG K8S_APT_MINOR=1.35
 COPY scripts/install-apt-repos.sh /tmp/scripts/
-RUN /tmp/scripts/install-apt-repos.sh
+RUN K8S_APT_MINOR="$K8S_APT_MINOR" /tmp/scripts/install-apt-repos.sh
 
 COPY scripts/install-system-pkgs.sh /tmp/scripts/
 RUN /tmp/scripts/install-system-pkgs.sh

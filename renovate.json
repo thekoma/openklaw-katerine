@@ -30,17 +30,27 @@
                 "docker"
             ],
             "automerge": true
+        },
+        {
+            "description": "Do NOT automerge Kubernetes APT minor bumps — kubectl version changes need human review",
+            "matchDatasources": [
+                "endoflife-date"
+            ],
+            "matchPackageNames": [
+                "kubernetes"
+            ],
+            "automerge": false
         }
     ],
     "customManagers": [
         {
             "customType": "regex",
-            "description": "Pinned ARG *_VERSION=vX.Y.Z lines annotated with a renovate comment",
+            "description": "Pinned ARG NAME=value lines annotated with a renovate comment in the Dockerfile",
             "managerFilePatterns": [
                 "/^Dockerfile$/"
             ],
             "matchStrings": [
-                "# renovate: datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)\\s+ARG \\w+_VERSION=(?<currentValue>v[\\d.]+)"
+                "# renovate: datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)(?:\\s+versioning=(?<versioning>\\S+))?\\s+ARG \\w+=(?<currentValue>[\\w.+-]+)"
             ],
             "versioningTemplate": "semver"
         }
