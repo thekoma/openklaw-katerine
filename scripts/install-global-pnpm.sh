@@ -14,5 +14,17 @@ PACKAGES=(
     mcporter
 )
 
+# Packages whose postinstall scripts MUST run (otherwise binaries are broken
+# even after a successful install). pnpm 10+ refuses to run lifecycle scripts
+# unless explicitly allowed.
+ALLOW_BUILDS=(
+    "@anthropic-ai/claude-code"
+)
+
+ALLOW_BUILD_ARGS=()
+for pkg in "${ALLOW_BUILDS[@]}"; do
+    ALLOW_BUILD_ARGS+=("--allow-build=$pkg")
+done
+
 mkdir -p "$PNPM_HOME/bin"
-pnpm add -g "${PACKAGES[@]}"
+pnpm add -g "${ALLOW_BUILD_ARGS[@]}" "${PACKAGES[@]}"
