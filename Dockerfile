@@ -8,8 +8,6 @@ RUN go install github.com/steipete/camsnap/cmd/camsnap@latest
 RUN go install github.com/steipete/goplaces/cmd/goplaces@latest
 RUN go install github.com/grafana/mcp-grafana/cmd/mcp-grafana@latest
 RUN git clone https://github.com/steipete/gogcli.git
-RUN sed -i 's/givenSet bool, given, familySet bool/givenSet bool, given string, familySet bool/' gogcli/internal/cmd/contacts_crud.go
-RUN sed -i 's/orgSet bool, org, titleSet bool/orgSet bool, org string, titleSet bool/' gogcli/internal/cmd/contacts_crud.go
 RUN cd gogcli && make
 RUN cp gogcli/bin/gog /go/bin/gog
 RUN git clone https://github.com/hashicorp/vault-mcp-server.git
@@ -23,7 +21,7 @@ USER root
 ENV PNPM_HOME="/usr/local/share/pnpm"
 ENV PATH="$PNPM_HOME/bin:$PATH"
 RUN mkdir -p "$PNPM_HOME/bin" && \
-    pnpm add -g clawhub mcporter @google/gemini-cli better-sqlite3 lancedb acpx @anthropic-ai/claude-code
+    pnpm add -g clawhub mcporter @google/gemini-cli better-sqlite3 acpx @anthropic-ai/claude-code
 ENV SYSTEM_PACKAGES="ffmpeg pipx mosh jq yq wget git vim ncdu ripgrep sqlite3 tmux iproute2 lsof procps gh vault kubectl wkhtmltopdf"
 RUN apt-get update && \
     apt-get install -yq --no-install-recommends wget gnupg lsb-release curl ca-certificates && \
