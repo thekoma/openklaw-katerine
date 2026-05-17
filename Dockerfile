@@ -20,9 +20,10 @@ RUN echo -e "##################\nBuilded go executables\n##################\n"; 
 FROM ghcr.io/openclaw/openclaw:2026.5.12 AS openclaw
 
 USER root
-ENV PNPM_HOME="/usr/local/bin"
-ENV PATH="$PNPM_HOME:$PATH"
-RUN pnpm add -g clawhub mcporter @google/gemini-cli better-sqlite3 lancedb acpx @anthropic-ai/claude-code
+ENV PNPM_HOME="/usr/local/share/pnpm"
+ENV PATH="$PNPM_HOME/bin:$PATH"
+RUN mkdir -p "$PNPM_HOME/bin" && \
+    pnpm add -g clawhub mcporter @google/gemini-cli better-sqlite3 lancedb acpx @anthropic-ai/claude-code
 ENV SYSTEM_PACKAGES="ffmpeg pipx mosh jq yq wget git vim ncdu ripgrep sqlite3 tmux iproute2 lsof procps gh vault kubectl wkhtmltopdf"
 RUN apt-get update && \
     apt-get install -yq --no-install-recommends wget gnupg lsb-release curl ca-certificates && \

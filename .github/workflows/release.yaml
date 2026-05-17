@@ -100,7 +100,7 @@ jobs:
           # Enable caching
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          output: type=registry,oci-mediatypes=true,compression=estargz,compression-level=9,force-compression=true
+          outputs: type=registry,oci-mediatypes=true,compression=estargz,compression-level=9,force-compression=true
           sbom: true
           provenance: true
       # Push the git tag strictly AFTER a successful build
