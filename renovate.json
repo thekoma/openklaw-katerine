@@ -31,5 +31,18 @@
             ],
             "automerge": true
         }
+    ],
+    "customManagers": [
+        {
+            "customType": "regex",
+            "description": "Pinned ARG *_VERSION=vX.Y.Z lines annotated with a renovate comment",
+            "managerFilePatterns": [
+                "/^Dockerfile$/"
+            ],
+            "matchStrings": [
+                "# renovate: datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)\\s+ARG \\w+_VERSION=(?<currentValue>v[\\d.]+)"
+            ],
+            "versioningTemplate": "semver"
+        }
     ]
 }

@@ -1,16 +1,29 @@
 FROM golang:1.26-alpine AS gobuilder
 
+# renovate: datasource=github-releases depName=steipete/gifgrep
+ARG GIFGREP_VERSION=v0.3.0
+# renovate: datasource=github-releases depName=steipete/camsnap
+ARG CAMSNAP_VERSION=v0.2.1
+# renovate: datasource=github-releases depName=steipete/goplaces
+ARG GOPLACES_VERSION=v0.4.2
+# renovate: datasource=github-releases depName=grafana/mcp-grafana
+ARG MCP_GRAFANA_VERSION=v0.14.0
+# renovate: datasource=github-tags depName=steipete/gogcli
+ARG GOGCLI_VERSION=v0.17.0
+# renovate: datasource=github-releases depName=hashicorp/vault-mcp-server
+ARG VAULT_MCP_SERVER_VERSION=v0.2.0
+
 WORKDIR /go
 ENV CGO_ENABLED=0
 RUN apk add --no-cache git make bash
-RUN go install github.com/steipete/gifgrep/cmd/gifgrep@latest
-RUN go install github.com/steipete/camsnap/cmd/camsnap@latest
-RUN go install github.com/steipete/goplaces/cmd/goplaces@latest
-RUN go install github.com/grafana/mcp-grafana/cmd/mcp-grafana@latest
-RUN git clone https://github.com/steipete/gogcli.git
+RUN go install github.com/steipete/gifgrep/cmd/gifgrep@${GIFGREP_VERSION}
+RUN go install github.com/steipete/camsnap/cmd/camsnap@${CAMSNAP_VERSION}
+RUN go install github.com/steipete/goplaces/cmd/goplaces@${GOPLACES_VERSION}
+RUN go install github.com/grafana/mcp-grafana/cmd/mcp-grafana@${MCP_GRAFANA_VERSION}
+RUN git clone --depth 1 --branch ${GOGCLI_VERSION} https://github.com/steipete/gogcli.git
 RUN cd gogcli && make
 RUN cp gogcli/bin/gog /go/bin/gog
-RUN git clone https://github.com/hashicorp/vault-mcp-server.git
+RUN git clone --depth 1 --branch ${VAULT_MCP_SERVER_VERSION} https://github.com/hashicorp/vault-mcp-server.git
 RUN cd vault-mcp-server && make build
 RUN cp vault-mcp-server/bin/vault-mcp-server /go/bin/vault-mcp-server
 RUN echo -e "##################\nBuilded go executables\n##################\n"; ls -altr /go/bin; echo -e "##################\n"
@@ -63,13 +76,18 @@ RUN pipx install uv && \
     rm -rf /root/.cache
 
 # CLI tools: argocd, helm, egctl
+# renovate: datasource=github-releases depName=argoproj/argo-cd
+ARG ARGOCD_VERSION=v3.4.2
+# renovate: datasource=github-releases depName=helm/helm
+ARG HELM_VERSION=v4.2.0
+# renovate: datasource=github-releases depName=envoyproxy/gateway
+ARG EGCTL_VERSION=v1.8.0
 RUN ARCH=$(dpkg --print-architecture) && \
-    ARGOCD_VERSION=$(curl -sL https://api.github.com/repos/argoproj/argo-cd/releases/latest | grep '"tag_name"' | cut -d'"' -f4) && \
-    curl -sL "https://github.com/argoproj/argo-cd/releases/download/${ARGOCD_VERSION}/argocd-linux-${ARCH}" -o /usr/local/bin/argocd && \
+    curl -fsSL "https://github.com/argoproj/argo-cd/releases/download/${ARGOCD_VERSION}/argocd-linux-${ARCH}" -o /usr/local/bin/argocd && \
     chmod +x /usr/local/bin/argocd && \
-    curl -sL https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash && \
-    EGCTL_VERSION=$(curl -sL https://api.github.com/repos/envoyproxy/gateway/releases/latest | grep '"tag_name"' | cut -d'"' -f4) && \
-    curl -sL "https://github.com/envoyproxy/gateway/releases/download/${EGCTL_VERSION}/egctl_${EGCTL_VERSION}_linux_${ARCH}.tar.gz" | tar xz --strip-components=3 -C /usr/local/bin bin/linux/${ARCH}/egctl && \
+    curl -fsSL "https://get.helm.sh/helm-${HELM_VERSION}-linux-${ARCH}.tar.gz" | tar xz --strip-components=1 -C /usr/local/bin linux-${ARCH}/helm && \
+    chmod +x /usr/local/bin/helm && \
+    curl -fsSL "https://github.com/envoyproxy/gateway/releases/download/${EGCTL_VERSION}/egctl_${EGCTL_VERSION}_linux_${ARCH}.tar.gz" | tar xz --strip-components=3 -C /usr/local/bin bin/linux/${ARCH}/egctl && \
     chmod +x /usr/local/bin/egctl
 
 COPY --from=gobuilder /go/bin/ /usr/local/bin/
