@@ -5,7 +5,7 @@ ARG GIFGREP_VERSION=v0.3.0
 # renovate: datasource=github-releases depName=steipete/camsnap
 ARG CAMSNAP_VERSION=v0.2.1
 # renovate: datasource=github-releases depName=steipete/goplaces
-ARG GOPLACES_VERSION=v0.4.2
+ARG GOPLACES_VERSION=v0.4.3
 # renovate: datasource=github-releases depName=grafana/mcp-grafana
 ARG MCP_GRAFANA_VERSION=v0.14.0
 # renovate: datasource=github-tags depName=steipete/gogcli
