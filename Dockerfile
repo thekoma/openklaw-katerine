@@ -9,7 +9,7 @@ ARG GOPLACES_VERSION=v0.4.4
 # renovate: datasource=github-releases depName=grafana/mcp-grafana
 ARG MCP_GRAFANA_VERSION=v0.17.0
 # renovate: datasource=github-tags depName=steipete/gogcli
-ARG GOGCLI_VERSION=v0.32.0
+ARG GOGCLI_VERSION=v0.33.0
 # renovate: datasource=github-releases depName=hashicorp/vault-mcp-server
 ARG VAULT_MCP_SERVER_VERSION=v0.2.0
 
