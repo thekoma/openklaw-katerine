@@ -55,7 +55,7 @@ RUN pipx install uv && \
 
 # CLI tools: argocd, helm, egctl
 # renovate: datasource=github-releases depName=argoproj/argo-cd
-ARG ARGOCD_VERSION=v3.4.5
+ARG ARGOCD_VERSION=v3.4.6
 # renovate: datasource=github-releases depName=helm/helm
 ARG HELM_VERSION=v4.2.3
 # renovate: datasource=github-releases depName=envoyproxy/gateway
