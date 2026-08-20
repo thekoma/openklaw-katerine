@@ -1,4 +1,4 @@
-FROM golang:1.26-alpine AS gobuilder
+FROM golang:1.27-alpine AS gobuilder
 
 # renovate: datasource=github-releases depName=steipete/gifgrep
 ARG GIFGREP_VERSION=v0.3.0
