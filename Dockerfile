@@ -3,7 +3,7 @@ FROM golang:1.27-alpine AS gobuilder
 # renovate: datasource=github-releases depName=steipete/gifgrep
 ARG GIFGREP_VERSION=v0.3.0
 # renovate: datasource=github-releases depName=steipete/camsnap
-ARG CAMSNAP_VERSION=v0.4.0
+ARG CAMSNAP_VERSION=v0.4.1
 # renovate: datasource=github-releases depName=steipete/goplaces
 ARG GOPLACES_VERSION=v0.4.4
 # renovate: datasource=github-releases depName=grafana/mcp-grafana
