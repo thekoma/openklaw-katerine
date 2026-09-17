@@ -1,7 +1,7 @@
 FROM golang:1.27-alpine AS gobuilder
 
 # renovate: datasource=github-releases depName=steipete/gifgrep
-ARG GIFGREP_VERSION=v0.4.1
+ARG GIFGREP_VERSION=v0.4.3
 # renovate: datasource=github-releases depName=steipete/camsnap
 ARG CAMSNAP_VERSION=v0.5.0
 # renovate: datasource=github-releases depName=steipete/goplaces
