@@ -7,7 +7,7 @@ ARG CAMSNAP_VERSION=v0.6.0
 # renovate: datasource=github-releases depName=steipete/goplaces
 ARG GOPLACES_VERSION=v0.4.11
 # renovate: datasource=github-releases depName=grafana/mcp-grafana
-ARG MCP_GRAFANA_VERSION=v2.0.1
+ARG MCP_GRAFANA_VERSION=v2.0.2
 # renovate: datasource=github-tags depName=steipete/gogcli
 ARG GOGCLI_VERSION=v0.43.0
 # renovate: datasource=github-releases depName=hashicorp/vault-mcp-server
