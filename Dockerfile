@@ -57,7 +57,7 @@ RUN pipx install uv && \
 # renovate: datasource=github-releases depName=argoproj/argo-cd
 ARG ARGOCD_VERSION=v3.5.5
 # renovate: datasource=github-releases depName=helm/helm
-ARG HELM_VERSION=v4.3.0
+ARG HELM_VERSION=v4.3.1
 # renovate: datasource=github-releases depName=envoyproxy/gateway
 ARG EGCTL_VERSION=v1.9.2
 COPY scripts/install-clitools.sh /tmp/scripts/
