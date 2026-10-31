@@ -59,7 +59,7 @@ ARG ARGOCD_VERSION=v3.5.6
 # renovate: datasource=github-releases depName=helm/helm
 ARG HELM_VERSION=v4.3.1
 # renovate: datasource=github-releases depName=envoyproxy/gateway
-ARG EGCTL_VERSION=v1.9.2
+ARG EGCTL_VERSION=v1.9.3
 COPY scripts/install-clitools.sh /tmp/scripts/
 RUN ARGOCD_VERSION="$ARGOCD_VERSION" \
     HELM_VERSION="$HELM_VERSION" \
